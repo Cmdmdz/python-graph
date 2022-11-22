@@ -3,13 +3,10 @@ from tkinter import *
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib import pyplot as plt
 import urllib.request as request
-import pandas as pd
-from datetime import datetime, timedelta
-
 
 def main():
     root = Tk()
-    root.resizable(False, False)
+    # root.resizable(False, False)
     gui = Window(root)
     gui.root.mainloop()
 
@@ -17,8 +14,7 @@ def main():
 
 
 # config api
-url = 'https://opend.data.go.th/get-ckan/datastore_search?limit=50&resource_id=219aa5a8-7621-4c63-85d3' \
-      '-64dd1914dff3 '
+url = 'https://opend.data.go.th/get-ckan/datastore_search?resource_id=219aa5a8-7621-4c63-85d3-64dd1914dff3'
 
 # token api on service data
 headers = {'api-key': 'L1jBiz9EWNRPXtsHy1IqVQvHrT0ZS5Yc'}
@@ -34,7 +30,7 @@ records = result['records']
 class Window:
     def __init__(self, root):
         self.root = root
-        self.root.geometry('750x750')
+        self.root.geometry('1440x880')
         self.amplitude = 1
         self.frequency = 1
         self.vertical_shift = 0
@@ -64,7 +60,7 @@ class Window:
     # function plot graph baht
     def plot_values_baht(self):
 
-        figure = plt.figure(figsize=(6, 6), dpi=100)
+        figure = plt.figure(figsize=(14, 8), dpi=100)
         chart = FigureCanvasTkAgg(figure, self.root)
         chart.get_tk_widget().grid(row=5, column=0)
 
@@ -72,49 +68,77 @@ class Window:
         exportBaht = []
         year = []
 
+        imBaht1 = []
+        exportBaht1 = []
+        year1 = []
+
         for data in records:
-            year.append(data['year'])
-            imBaht.append(data['import_baht'])
-            exportBaht.append(data['export_baht'])
+            if data['year'] == 2021:
+                year.append(data['month_name'])
+                imBaht.append(data['import_baht'])
+                exportBaht.append(data['export_baht'])
+            elif data['year'] == 2022:
+                year1.append(data['month_name'])
+                imBaht1.append(data['import_baht'])
+                exportBaht1.append(data['export_baht'])
 
-        plt.plot(year, imBaht, marker='o', label='Import BAHT')
-        plt.plot(year, exportBaht, marker='o', label='Export BAHT')
+        plt.ticklabel_format(style='plain', axis='y')
+        plt.plot(year, imBaht, marker='o', label='Import 2021')
+        plt.plot(year, exportBaht, marker='o', label='Export 2021')
 
-        plt.ticklabel_format(useOffset=False)
+        plt.plot(year1, imBaht1, marker='o', label='Import 2022')
+        plt.plot(year1, exportBaht1, marker='o', label='Export 2022')
+
+        plt.gcf().autofmt_xdate()
+
         plt.title('BAHT')
-        plt.xlabel('year')
-        plt.ylabel('import baht , export baht')
+        plt.xlabel('MONTH')
+        plt.ylabel('IMPORT BAHT : EXPORT BAHT')
         plt.tight_layout()
         plt.legend()
+
         return None
 
     # function plot graph us
     def plot_values_us(self):
 
-        # laouts graph
-        figure = plt.figure(figsize=(6, 6), dpi=100)
+        figure = plt.figure(figsize=(14, 8), dpi=100)
         chart = FigureCanvasTkAgg(figure, self.root)
         chart.get_tk_widget().grid(row=5, column=0)
 
-        imUs = []
-        exportUs = []
+        imBaht = []
+        exportBaht = []
         year = []
 
-        # loob add data to array from records api.
+        imBaht1 = []
+        exportBaht1 = []
+        year1 = []
+
         for data in records:
-            year.append(data["year"])
-            imUs.append(data['import_us'])
-            exportUs.append(data['export_us'])
+            if data['year'] == 2021:
+                year.append(data['month_name'])
+                imBaht.append(data['import_us'])
+                exportBaht.append(data['export_us'])
+            elif data['year'] == 2022:
+                year1.append(data['month_name'])
+                imBaht1.append(data['import_us'])
+                exportBaht1.append(data['export_us'])
 
-        plt.plot(year, imUs, marker='o', label='Import US')
-        plt.plot(year, exportUs, marker='o', label='Export US')
+        plt.ticklabel_format(style='plain', axis='y')
+        plt.plot(year, imBaht, marker='o', label='Import 2021')
+        plt.plot(year, exportBaht, marker='o', label='Export 2021')
 
-        plt.ticklabel_format(useOffset=False)
+        plt.plot(year1, imBaht1, marker='o', label='Import 2022')
+        plt.plot(year1, exportBaht1, marker='o', label='Export 2022')
+
+        plt.gcf().autofmt_xdate()
+
         plt.title('US')
-        plt.xlabel('year')
-        plt.ylabel('import us , export us')
+        plt.xlabel('MONTH')
+        plt.ylabel('IMPORT US : EXPORT US')
         plt.tight_layout()
         plt.legend()
+
         return None
 
     pass
